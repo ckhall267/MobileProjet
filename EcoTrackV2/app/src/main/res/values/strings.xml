@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Eco-Track</string>
+    <string name="email">Email</string>
+    <string name="mot_de_passe">Mot de passe</string>
+    <string name="se_connecter">Se connecter</string>
+    <string name="sinscrire">inscrire</string>
+    <string name="nom">nom</string>
+    <string name="scanner_un_produit">Scanner un produit</string>
+    <string name="bienvenue_sur_ecotrack">Bienvenue sur EcoTrack</string>
+    <string name="nom_du_produit">Nom du produit</string>
+    <string name="bienvenue_message">Bienvenue dans Eco Track</string>
+    <string name="logo_description">Logo Eco Track</string>
+    <string name="google_maps_key">AIzaSyDfC-FzDu9bxy-lStpNKLCSCaaVT9PUTMQ</string>
+    <string name="recycler_view_history_description">Liste de l historique des produits scannés</string>
+</resources>
