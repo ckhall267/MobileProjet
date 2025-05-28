@@ -4,22 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.eco_track.api.AuthApiService;
-import com.example.eco_track.api.RetrofitClient;
 import com.example.eco_track.model.User;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -27,15 +20,11 @@ public class LoginActivity extends AppCompatActivity {
     private MaterialButton registerButton;
     private TextInputEditText emailEditText, passwordEditText;
     private ProgressBar progressBar;
-    private AuthApiService authApiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        // Initialisation de Retrofit
-        authApiService = RetrofitClient.getClient().create(AuthApiService.class);
 
         // Initialisation des vues
         loginButton = findViewById(R.id.loginButton);
@@ -56,38 +45,17 @@ public class LoginActivity extends AppCompatActivity {
             progressBar.setVisibility(View.VISIBLE);
             loginButton.setEnabled(false);
 
-            User loginRequest = new User(email, password);
+            // Création d'un utilisateur fictif pour le test
+            User user = new User(1L, email, password);
+            user.setToken("fake_token_for_testing");
             
-            authApiService.login(loginRequest).enqueue(new Callback<User>() {
-                @Override
-                public void onResponse(Call<User> call, Response<User> response) {
-                    progressBar.setVisibility(View.GONE);
-                    loginButton.setEnabled(true);
-
-                    if (response.isSuccessful() && response.body() != null) {
-                        User user = response.body();
-                        saveUserToPreferences(user);
-                        
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        Toast.makeText(LoginActivity.this, 
-                            "Échec de la connexion. Vérifiez vos identifiants.", 
-                            Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<User> call, Throwable t) {
-                    progressBar.setVisibility(View.GONE);
-                    loginButton.setEnabled(true);
-                    Toast.makeText(LoginActivity.this, 
-                        "Erreur de connexion au serveur", 
-                        Toast.LENGTH_SHORT).show();
-                    Log.e("LoginActivity", "Erreur lors de la connexion", t);
-                }
-            });
+            // Sauvegarde des données utilisateur
+            saveUserToPreferences(user);
+            
+            // Redirection vers MainActivity
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
         });
 
         registerButton.setOnClickListener(v -> {
@@ -101,7 +69,7 @@ public class LoginActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putLong("user_id", user.getId());
         editor.putString("user_email", user.getEmail());
-        editor.putString("token", user.getToken()); // Sauvegarde du token si disponible
+        editor.putString("token", user.getToken());
         editor.apply();
     }
 }
